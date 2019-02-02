@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/01/19 19:39:20
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/02/19 14:06:40
 Lab							     Page 1 - 1
 
 
@@ -151,36 +151,54 @@ Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/01/19 19:39:20
 			      C 
 
  00000000			.data
- 00000000 00004040		val1 dword 4040h
- 00000004 00001555		val2 dword 1555h
- 00000008 48 65 6C 6C 6F	val3 byte "Hello World"
-	   20 57 6F 72 6C
-	   64
+ 00000000 00000001			myArray DWORD 0001h, 0002h, 0003h, 0004h, 0005h, 0006h
+	   00000002
+	   00000003
+	   00000004
+	   00000005
+	   00000006
+ 00000018 00000018			myArraySize DWORD SIZEOF myArray
+ 0000001C 00000006			myArrayLength DWORD LENGTHOF myArray
+ 00000020 61				myByte1 BYTE "a"
+ 00000021 00 00				myByte2 BYTE ?,0
+ 00000023  0000000A [			myArray2 SDWORD 10 DUP(-71)
+	    FFFFFFB9
+	   ]
 
  00000000			.code	
  00000000			main PROC
- 00000000  BA 00000008 R		mov EDX, offset val3
- 00000005  E8 00000000 E		call WriteString
- 0000000A  E8 00000000 E		call crlf
+ 00000000  A0 00000020 R		MOV AL, myByte1
+ 00000005  2C 20			SUB AL, 20h
+ 00000007  A2 00000021 R		MOV myByte2, AL
+ 0000000C  E8 00000000 E		CALL WriteChar
+ 00000011  E8 00000000 E		CALL Crlf
 
- 0000000F  A1 00000000 R		mov EAX, val1
- 00000014  03 05 00000004 R		add EAX, val2
- 0000001A  8B 0D 00000004 R		mov ECX, val2
- 00000020  81 E9 00000500		sub ECX, 500h
- 00000026  BB 00003000			mov EBX, 3000h
- 0000002B  03 C3			add EAX, EBX
- 0000002D  2B C1			sub EAX, ECX
- 0000002F  01 0D 00000004 R		add val2, ECX
- 00000035  B8 00001111			mov EAX, 1111h
- 0000003A  01 05 00000000 R		add val1, EAX
+ 00000016  A1 00000018 R		MOV EAX, myArraySize
+ 0000001B  E8 00000000 E		CALL WriteDec 
+ 00000020  E8 00000000 E		CALL Crlf
 
- 00000040  E8 00000000 E		call DumpRegs
+ 00000025  A1 0000001C R		MOV EAX, myArrayLength
+ 0000002A  E8 00000000 E		CALL WriteDec
+ 0000002F  E8 00000000 E		CALL Crlf
+
+ 00000034  C7 05 00000027 R		MOV myArray2+4, 11112222h
+	   11112222
+ 0000003E  A1 00000027 R		MOV EAX, myArray2+4
+ 00000043  E8 00000000 E		CALL WriteHex
+ 00000048  E8 00000000 E		CALL Crlf
+
+ 0000004D  66| 8B 1D			MOV BX, WORD PTR myArray2+6
+	   00000029 R
+ 00000054  E8 00000000 E		CALL Crlf
+
+
+ 00000059  E8 00000000 E		call DumpRegs
 					exit
- 00000045  6A 00	   *	    push   +000000000h
- 00000047  E8 00000000 E   *	    call   ExitProcess
- 0000004C			main ENDP
+ 0000005E  6A 00	   *	    push   +000000000h
+ 00000060  E8 00000000 E   *	    call   ExitProcess
+ 00000065			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/01/19 19:39:20
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/02/19 14:06:40
 Lab							     Symbols 2 - 1
 
 
@@ -274,8 +292,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000013 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 0000004C Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000004B Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000065 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -382,7 +400,7 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000004C Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000065 Public STDCALL
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -615,10 +633,13 @@ lightGreen . . . . . . . . . . .	Number	 0000000Ah
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
+myArray2 . . . . . . . . . . . .	DWord	 00000023 _DATA	
+myArrayLength  . . . . . . . . .	DWord	 0000001C _DATA	
+myArraySize  . . . . . . . . . .	DWord	 00000018 _DATA	
+myArray  . . . . . . . . . . . .	DWord	 00000000 _DATA	
+myByte1  . . . . . . . . . . . .	Byte	 00000020 _DATA	
+myByte2  . . . . . . . . . . . .	Byte	 00000021 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-val1 . . . . . . . . . . . . . .	DWord	 00000000 _DATA	
-val2 . . . . . . . . . . . . . .	DWord	 00000004 _DATA	
-val3 . . . . . . . . . . . . . .	Byte	 00000008 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   

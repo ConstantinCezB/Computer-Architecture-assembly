@@ -2,26 +2,35 @@ TITLE Lab2
 INCLUDE Irvine32.inc
 
 .data
-val1 dword 4040h
-val2 dword 1555h
-val3 byte "Hello World"
+	myArray DWORD 0001h, 0002h, 0003h, 0004h, 0005h, 0006h
+	myArraySize DWORD SIZEOF myArray
+	myArrayLength DWORD LENGTHOF myArray
+	myByte1 BYTE "a"
+	myByte2 BYTE ?,0
+	myArray2 SDWORD 10 DUP(-71)
 
 .code	
 main PROC
-	mov EDX, offset val3
-	call WriteString
-	call crlf
+	MOV AL, myByte1
+	SUB AL, 20h
+	MOV myByte2, AL
+	CALL WriteChar
+	CALL Crlf
 
-	mov EAX, val1
-	add EAX, val2
-	mov ECX, val2
-	sub ECX, 500h
-	mov EBX, 3000h
-	add EAX, EBX
-	sub EAX, ECX
-	add val2, ECX
-	mov EAX, 1111h
-	add val1, EAX
+	MOV EAX, myArraySize
+	CALL WriteDec 
+	CALL Crlf
+
+	MOV EAX, myArrayLength
+	CALL WriteDec
+	CALL Crlf
+
+	MOV myArray2+4, 11112222h
+	MOV EAX, myArray2+4
+	CALL WriteHex
+	CALL Crlf
+
+	MOV BX, WORD PTR myArray2+6
 
 	call DumpRegs
 	exit
