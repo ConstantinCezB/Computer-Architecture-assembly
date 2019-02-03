@@ -6,10 +6,11 @@ question2 BYTE "What is the value of D: ", 0
 dispayFormula BYTE "Z = (A + B) - (C - D)", 0
 separator BYTE "   ;   ", 0
 A DWORD 543210d
-B DWORD 3210d
+B WORD 3210d
 Cval DWORD ?
-D DWORD ?
+D BYTE ?
 Z DWORD ?
+temp DWORD ? 
  
 .code
 main proc
@@ -18,11 +19,12 @@ main proc
 	CALL ReadInt
 	MOV Cval, EAX
 	CALL Crlf
-
 	MOV EDX, OFFSET question2
 	CALL WriteString
 	CALL ReadInt
-	MOV D, EAX
+	MOV temp, EAX
+	MOV al, BYTE PTR temp
+	MOV BYTE PTR D, al
 	CALL Crlf
 
 	MOV EDX, OFFSET dispayFormula
@@ -35,16 +37,25 @@ main proc
 	MOV Z, EAX
 	CALL WriteInt
 	CALL WriteString
-	MOV EAX, B
+
+	MOV temp, 0h
+	MOV AX, B
+	MOV WORD PTR temp, AX
+	MOV EAX, temp
 	ADD Z, EAX
 	CALL WriteInt
 	CALL WriteString
+
 	MOV EAX, Cval
 	CALL WriteInt
 	CALL WriteString
-	SUB EAX, D
+
+	MOV temp, 0
+	MOV AL, D
+	MOV BYTE PTR temp, al
+	SUB EAX, temp
 	SUB Z, EAX
-	MOV EAX, D
+	MOV EAX, temp
 	CALL WriteInt
 	CALL Crlf
 	CALL Crlf

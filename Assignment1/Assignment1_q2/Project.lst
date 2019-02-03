@@ -1,5 +1,5 @@
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/02/19 16:10:18
-assignment1.asm						     Page 1 - 1
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/02/19 18:27:51
+assignment1_q2.asm					     Page 1 - 1
 
 
 				include Irvine32.inc
@@ -150,86 +150,48 @@ assignment1.asm						     Page 1 - 1
 			      C 
 
  00000000			.data
- 00000000 57 68 61 74 20	question1 BYTE "What is the value of C: ", 0
-	   69 73 20 74 68
-	   65 20 76 61 6C
-	   75 65 20 6F 66
-	   20 43 3A 20 00
- 00000019 57 68 61 74 20	question2 BYTE "What is the value of D: ", 0
-	   69 73 20 74 68
-	   65 20 76 61 6C
-	   75 65 20 6F 66
-	   20 44 3A 20 00
- 00000032 5A 20 3D 20 28	dispayFormula BYTE "Z = (A + B) - (C - D)", 0
-	   41 20 2B 20 42
-	   29 20 2D 20 28
-	   43 20 2D 20 44
-	   29 00
- 00000048 20 20 20 3B 20	separator BYTE "   ;   ", 0
-	   20 20 00
- 00000050 000849EA		A DWORD 543210d
- 00000054 00000C8A		B DWORD 3210d
- 00000058 00000000		Cval DWORD ?
- 0000005C 00000000		D DWORD ?
- 00000060 00000000		Z DWORD ?
-				 
+ 00000000 62 69 67 45 6E	bigEndianString BYTE "bigEndian: ", 0
+	   64 69 61 6E 3A
+	   20 00
+ 0000000C 89 AB CD EF		bigEndian BYTE 089h, 0ABh, 0CDh, 0EFh
+ 00000010 6C 69 74 74 6C	littleEndianString BYTE "littleEndian: ", 0
+	   65 45 6E 64 69
+	   61 6E 3A 20 00
+ 0000001F 00000000		littleEndian DWORD ?
+
  00000000			.code
  00000000			main proc
- 00000000  BA 00000000 R		MOV EDX, OFFSET question1
- 00000005  E8 00000000 E		CALL WriteString
- 0000000A  E8 00000000 E		CALL ReadInt
- 0000000F  A3 00000058 R		MOV Cval, EAX
- 00000014  E8 00000000 E		CALL Crlf
+ 00000000  A0 0000000C R		mov al,BYTE PTR bigEndian+0
+ 00000005  8A 25 0000000D R		mov ah,BYTE PTR bigEndian+1
+ 0000000B  8A 1D 0000000E R		mov bl,BYTE PTR bigEndian+2
+ 00000011  8A 3D 0000000F R		mov bh,BYTE PTR bigEndian+3
 
- 00000019  BA 00000019 R		MOV EDX, OFFSET question2
- 0000001E  E8 00000000 E		CALL WriteString
- 00000023  E8 00000000 E		CALL ReadInt
- 00000028  A3 0000005C R		MOV D, EAX
- 0000002D  E8 00000000 E		CALL Crlf
+ 00000017  88 3D 0000001F R		mov BYTE PTR littleEndian+0,bh
+ 0000001D  88 1D 00000020 R		mov BYTE PTR littleEndian+1,bl
+ 00000023  88 25 00000021 R		mov BYTE PTR littleEndian+2,ah
+ 00000029  A2 00000022 R		mov BYTE PTR littleEndian+3,al
 
- 00000032  BA 00000032 R		MOV EDX, OFFSET dispayFormula
- 00000037  E8 00000000 E		CALL WriteString
- 0000003C  E8 00000000 E		CALL Crlf
- 00000041  E8 00000000 E		CALL Crlf
+ 0000002E  BA 00000000 R		MOV EDX, OFFSET bigEndianString
+ 00000033  E8 00000000 E		CALL WriteString
+ 00000038  A1 0000000C R		MOV EAX, DWORD PTR bigEndian
+ 0000003D  E8 00000000 E		CALL WriteHex
+ 00000042  E8 00000000 E		CALL Crlf
 
- 00000046  BA 00000048 R		MOV EDX, OFFSET separator
- 0000004B  A1 00000050 R		MOV EAX, A
- 00000050  A3 00000060 R		MOV Z, EAX
- 00000055  E8 00000000 E		CALL WriteInt
- 0000005A  E8 00000000 E		CALL WriteString
- 0000005F  A1 00000054 R		MOV EAX, B
- 00000064  01 05 00000060 R		ADD Z, EAX
- 0000006A  E8 00000000 E		CALL WriteInt
- 0000006F  E8 00000000 E		CALL WriteString
- 00000074  A1 00000058 R		MOV EAX, Cval
- 00000079  E8 00000000 E		CALL WriteInt
- 0000007E  E8 00000000 E		CALL WriteString
- 00000083  2B 05 0000005C R		SUB EAX, D
- 00000089  29 05 00000060 R		SUB Z, EAX
- 0000008F  A1 0000005C R		MOV EAX, D
- 00000094  E8 00000000 E		CALL WriteInt
- 00000099  E8 00000000 E		CALL Crlf
-
- 0000009E  A1 00000060 R		MOV EAX, Z
- 000000A3  E8 00000000 E		CALL WriteBin
- 000000A8  E8 00000000 E		CALL Crlf
- 000000AD  E8 00000000 E		CALL WriteDec
- 000000B2  E8 00000000 E		CALL Crlf
- 000000B7  E8 00000000 E		CALL WriteHex
- 000000BC  E8 00000000 E		CALL Crlf
-
-
-
-
-
+ 00000047  BA 00000010 R		MOV EDX, OFFSET littleEndianString
+ 0000004C  A1 0000001F R		MOV EAX, littleEndian
+ 00000051  E8 00000000 E		CALL WriteString
+ 00000056  E8 00000000 E		CALL WriteHex
+ 0000005B  E8 00000000 E		CALL Crlf
 					
+
+
 					exit
- 000000C1  6A 00	   *	    push   +000000000h
- 000000C3  E8 00000000 E   *	    call   ExitProcess
- 000000C8			main endp
+ 00000060  6A 00	   *	    push   +000000000h
+ 00000062  E8 00000000 E   *	    call   ExitProcess
+ 00000067			main endp
 				end main
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/02/19 16:10:18
-assignment1.asm						     Symbols 2 - 1
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/02/19 18:27:51
+assignment1_q2.asm					     Symbols 2 - 1
 
 
 
@@ -322,8 +284,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000064 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000000C8 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000023 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000067 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -430,7 +392,7 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000C8 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000067 Public STDCALL
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -450,16 +412,12 @@ Symbols:
 @fardata . . . . . . . . . . . .	Text   	 FLAT
 @stack . . . . . . . . . . . . .	Text   	 FLAT
 ALT_MASK . . . . . . . . . . . .	Number	 00000003h   
-A  . . . . . . . . . . . . . . .	DWord	 00000050 _DATA	
-B  . . . . . . . . . . . . . . .	DWord	 00000054 _DATA	
 CAPSLOCK_ON  . . . . . . . . . .	Number	 00000080h   
 CREATE_ALWAYS  . . . . . . . . .	Number	 00000002h   
 CREATE_NEW . . . . . . . . . . .	Number	 00000001h   
 CTRL_MASK  . . . . . . . . . . .	Number	 0000000Ch   
 CreateFile . . . . . . . . . . .	Text   	 CreateFileA
-Cval . . . . . . . . . . . . . .	DWord	 00000058 _DATA	
 DO_NOT_SHARE . . . . . . . . . .	Number	 00000000h   
-D  . . . . . . . . . . . . . . .	DWord	 0000005C _DATA	
 ENABLE_ECHO_INPUT  . . . . . . .	Number	 00000004h   
 ENABLE_LINE_INPUT  . . . . . . .	Number	 00000002h   
 ENABLE_MOUSE_INPUT . . . . . . .	Number	 00000010h   
@@ -653,12 +611,12 @@ VK_UP  . . . . . . . . . . . . .	Number	 00000026h
 WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h   
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
-Z  . . . . . . . . . . . . . . .	DWord	 00000060 _DATA	
+bigEndianString  . . . . . . . .	Byte	 00000000 _DATA	
+bigEndian  . . . . . . . . . . .	Byte	 0000000C _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 brown  . . . . . . . . . . . . .	Number	 00000006h   
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
-dispayFormula  . . . . . . . . .	Byte	 00000032 _DATA	
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
 gray . . . . . . . . . . . . . .	Number	 00000008h   
 green  . . . . . . . . . . . . .	Number	 00000002h   
@@ -668,11 +626,10 @@ lightGray  . . . . . . . . . . .	Number	 00000007h
 lightGreen . . . . . . . . . . .	Number	 0000000Ah   
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
+littleEndianString . . . . . . .	Byte	 00000010 _DATA	
+littleEndian . . . . . . . . . .	DWord	 0000001F _DATA	
 magenta  . . . . . . . . . . . .	Number	 00000005h   
-question1  . . . . . . . . . . .	Byte	 00000000 _DATA	
-question2  . . . . . . . . . . .	Byte	 00000019 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-separator  . . . . . . . . . . .	Byte	 00000048 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
