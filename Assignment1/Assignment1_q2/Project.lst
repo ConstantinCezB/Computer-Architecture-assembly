@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/02/19 18:27:51
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/04/19 11:31:35
 assignment1_q2.asm					     Page 1 - 1
 
 
@@ -153,44 +153,52 @@ assignment1_q2.asm					     Page 1 - 1
  00000000 62 69 67 45 6E	bigEndianString BYTE "bigEndian: ", 0
 	   64 69 61 6E 3A
 	   20 00
- 0000000C 89 AB CD EF		bigEndian BYTE 089h, 0ABh, 0CDh, 0EFh
- 00000010 6C 69 74 74 6C	littleEndianString BYTE "littleEndian: ", 0
+ 0000000C 6C 69 74 74 6C	littleEndianString BYTE "littleEndian: ", 0
 	   65 45 6E 64 69
 	   61 6E 3A 20 00
+ 0000001B 89 AB CD EF		bigEndian BYTE 089h, 0ABh, 0CDh, 0EFh
  0000001F 00000000		littleEndian DWORD ?
+ 00000023 00000000		bigEndianVar DWORD ? 
+
 
  00000000			.code
  00000000			main proc
- 00000000  A0 0000000C R		mov al,BYTE PTR bigEndian+0
- 00000005  8A 25 0000000D R		mov ah,BYTE PTR bigEndian+1
- 0000000B  8A 1D 0000000E R		mov bl,BYTE PTR bigEndian+2
- 00000011  8A 3D 0000000F R		mov bh,BYTE PTR bigEndian+3
 
- 00000017  88 3D 0000001F R		mov BYTE PTR littleEndian+0,bh
- 0000001D  88 1D 00000020 R		mov BYTE PTR littleEndian+1,bl
- 00000023  88 25 00000021 R		mov BYTE PTR littleEndian+2,ah
- 00000029  A2 00000022 R		mov BYTE PTR littleEndian+3,al
+ 00000000  A0 0000001B R		mov al, bigEndian+0
+ 00000005  8A 25 0000001C R		mov ah, bigEndian+1
+ 0000000B  8A 1D 0000001D R		mov bl, bigEndian+2
+ 00000011  8A 3D 0000001E R		mov bh, bigEndian+3
 
- 0000002E  BA 00000000 R		MOV EDX, OFFSET bigEndianString
- 00000033  E8 00000000 E		CALL WriteString
- 00000038  A1 0000000C R		MOV EAX, DWORD PTR bigEndian
- 0000003D  E8 00000000 E		CALL WriteHex
- 00000042  E8 00000000 E		CALL Crlf
+ 00000017  88 3D 0000001F R		mov bigEndian+4, bh
+ 0000001D  88 1D 00000020 R		mov bigEndian+5, bl
+ 00000023  88 25 00000021 R		mov bigEndian+6, ah
+ 00000029  A2 00000022 R		mov bigEndian+7, al
 
- 00000047  BA 00000010 R		MOV EDX, OFFSET littleEndianString
- 0000004C  A1 0000001F R		MOV EAX, littleEndian
- 00000051  E8 00000000 E		CALL WriteString
- 00000056  E8 00000000 E		CALL WriteHex
- 0000005B  E8 00000000 E		CALL Crlf
+ 0000002E  A2 00000023 R		mov bigEndian+8, al
+ 00000033  88 25 00000024 R		mov bigEndian+9, ah
+ 00000039  88 1D 00000025 R		mov bigEndian+10, bl
+ 0000003F  88 3D 00000026 R		mov bigEndian+11, bh
+
+ 00000045  BA 00000000 R		MOV EDX, OFFSET bigEndianString
+ 0000004A  E8 00000000 E		CALL WriteString
+ 0000004F  A1 00000023 R		MOV EAX, bigEndianVar
+ 00000054  E8 00000000 E		CALL WriteHex
+ 00000059  E8 00000000 E		CALL Crlf
+
+ 0000005E  BA 0000000C R		MOV EDX, OFFSET littleEndianString
+ 00000063  A1 0000001F R		MOV EAX, littleEndian
+ 00000068  E8 00000000 E		CALL WriteString
+ 0000006D  E8 00000000 E		CALL WriteHex
+ 00000072  E8 00000000 E		CALL Crlf
 					
 
 
 					exit
- 00000060  6A 00	   *	    push   +000000000h
- 00000062  E8 00000000 E   *	    call   ExitProcess
- 00000067			main endp
+ 00000077  6A 00	   *	    push   +000000000h
+ 00000079  E8 00000000 E   *	    call   ExitProcess
+ 0000007E			main endp
 				end main
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/02/19 18:27:51
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/04/19 11:31:35
 assignment1_q2.asm					     Symbols 2 - 1
 
 
@@ -284,8 +292,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000023 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000067 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000027 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000007E Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -392,7 +400,7 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000067 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000007E Public STDCALL
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -612,7 +620,8 @@ WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
 bigEndianString  . . . . . . . .	Byte	 00000000 _DATA	
-bigEndian  . . . . . . . . . . .	Byte	 0000000C _DATA	
+bigEndianVar . . . . . . . . . .	DWord	 00000023 _DATA	
+bigEndian  . . . . . . . . . . .	Byte	 0000001B _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 brown  . . . . . . . . . . . . .	Number	 00000006h   
@@ -626,7 +635,7 @@ lightGray  . . . . . . . . . . .	Number	 00000007h
 lightGreen . . . . . . . . . . .	Number	 0000000Ah   
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
-littleEndianString . . . . . . .	Byte	 00000010 _DATA	
+littleEndianString . . . . . . .	Byte	 0000000C _DATA	
 littleEndian . . . . . . . . . .	DWord	 0000001F _DATA	
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 red  . . . . . . . . . . . . . .	Number	 00000004h   

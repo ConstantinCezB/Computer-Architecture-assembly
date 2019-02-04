@@ -2,25 +2,33 @@ include Irvine32.inc
 
 .data
 bigEndianString BYTE "bigEndian: ", 0
-bigEndian BYTE 089h, 0ABh, 0CDh, 0EFh
 littleEndianString BYTE "littleEndian: ", 0
+bigEndian BYTE 089h, 0ABh, 0CDh, 0EFh
 littleEndian DWORD ?
+bigEndianVar DWORD ? 
+
 
 .code
 main proc
-	mov al,BYTE PTR bigEndian+0
-	mov ah,BYTE PTR bigEndian+1
-	mov bl,BYTE PTR bigEndian+2
-	mov bh,BYTE PTR bigEndian+3
 
-	mov BYTE PTR littleEndian+0,bh
-	mov BYTE PTR littleEndian+1,bl
-	mov BYTE PTR littleEndian+2,ah
-	mov BYTE PTR littleEndian+3,al
+	mov al, bigEndian+0
+	mov ah, bigEndian+1
+	mov bl, bigEndian+2
+	mov bh, bigEndian+3
+
+	mov bigEndian+4, bh
+	mov bigEndian+5, bl
+	mov bigEndian+6, ah
+	mov bigEndian+7, al
+
+	mov bigEndian+8, al
+	mov bigEndian+9, ah
+	mov bigEndian+10, bl
+	mov bigEndian+11, bh
 
 	MOV EDX, OFFSET bigEndianString
 	CALL WriteString
-	MOV EAX, DWORD PTR bigEndian
+	MOV EAX, bigEndianVar
 	CALL WriteHex
 	CALL Crlf
 

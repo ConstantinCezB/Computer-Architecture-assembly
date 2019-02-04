@@ -16,47 +16,37 @@ temp DWORD ?
 main proc
 	MOV EDX, OFFSET question1
 	CALL WriteString
-	CALL ReadInt
+	CALL ReadDec
 	MOV Cval, EAX
-	CALL Crlf
 	MOV EDX, OFFSET question2
 	CALL WriteString
-	CALL ReadInt
-	MOV temp, EAX
-	MOV al, BYTE PTR temp
-	MOV BYTE PTR D, al
-	CALL Crlf
+	CALL ReadDec
+	MOV D, al
 
 	MOV EDX, OFFSET dispayFormula
 	CALL WriteString
-	CALL Crlf
 	CALL Crlf
 
 	MOV EDX, OFFSET separator
 	MOV EAX, A
 	MOV Z, EAX
-	CALL WriteInt
-	CALL WriteString
+	CALL WriteDec
+	CALL WriteString 
 
-	MOV temp, 0h
-	MOV AX, B
-	MOV WORD PTR temp, AX
-	MOV EAX, temp
+	MOVZX EAX, B
 	ADD Z, EAX
-	CALL WriteInt
+	CALL WriteDec
 	CALL WriteString
 
 	MOV EAX, Cval
-	CALL WriteInt
+	CALL WriteDec
 	CALL WriteString
 
-	MOV temp, 0
-	MOV AL, D
-	MOV BYTE PTR temp, al
-	SUB EAX, temp
+	MOVZX EDX, D
+	SUB EAX, EDX
 	SUB Z, EAX
-	MOV EAX, temp
-	CALL WriteInt
+	MOV EAX, EDX
+	CALL WriteDec
 	CALL Crlf
 	CALL Crlf
 
