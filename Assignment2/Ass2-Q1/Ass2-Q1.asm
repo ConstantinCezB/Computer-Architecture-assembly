@@ -1,11 +1,14 @@
+; Author: Cezar Begu 104808191
+
 include Irvine32.inc
 
 .data
-displayMessage1 BYTE 'Fibonacci sequence with N = ', 0
 counter DWORD 0
-displayMessage2 BYTE ' is:', 0
 sumOfPrevTwo DWORD 0
 space BYTE ' ', 0
+; Messages used to display info for the user
+displayMessage1 BYTE 'Fibonacci sequence with N = ', 0
+displayMessage2 BYTE ' is:', 0
 
 .code
 main proc
@@ -35,6 +38,7 @@ main proc
 		CALL WriteString
 		CALL WriteDec 
 
+		; Fib calculations
 		MOV sumOfPrevTwo, EAX
 		ADD sumOfPrevTwo, EBX
 		MOV EAX, EBX
