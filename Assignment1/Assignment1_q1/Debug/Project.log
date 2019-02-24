@@ -1,2 +1,4 @@
-﻿  Assembling assignment1_q1.asm...
-  Project.vcxproj -> C:\Users\const\Documents\Computer-Architecture-assembly\Assignment1\Assignment1_q1\Debug\Project.exe
+﻿  Assembling Ass1-Q1.asm...
+Ass1-Q1.asm(7): error A2149: byte register cannot be first operand
+Ass1-Q1.asm(8): error A2149: byte register cannot be first operand
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\BuildCustomizations\masm.targets(69,5): error MSB3721: The command "ml.exe /c /nologo /Sg /Zi /Fo"Debug\Ass1-Q1.obj" /Fl"Project.lst" /I "c:\Irvine" /W3 /errorReport:prompt  /Ta"Ass1-Q1.asm"" exited with code 1.

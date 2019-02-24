@@ -1,5 +1,5 @@
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/04/19 11:31:35
-assignment1_q2.asm					     Page 1 - 1
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/04/19 22:22:25
+Ass1-Q2.asm						     Page 1 - 1
 
 
 				include Irvine32.inc
@@ -198,8 +198,8 @@ assignment1_q2.asm					     Page 1 - 1
  00000079  E8 00000000 E   *	    call   ExitProcess
  0000007E			main endp
 				end main
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/04/19 11:31:35
-assignment1_q2.asm					     Symbols 2 - 1
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/04/19 22:22:25
+Ass1-Q2.asm						     Symbols 2 - 1
 
 
 
