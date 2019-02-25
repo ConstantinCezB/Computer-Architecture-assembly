@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 11:47:15
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 13:11:28
 Ass2-Q2.asm						     Page 1 - 1
 
 
@@ -227,8 +227,8 @@ Ass2-Q2.asm						     Page 1 - 1
  00000028  3C 00				cmp AL, 0
  0000002A  74 37				JE L1
 						;statment 1
-
-
+						; Converts from lower to upper
+						; .IF AL >= 'a' && AL <= 'z'
  0000002C  3C 61				cmp AL, 'a'
  0000002E  72 1A				JB  next
  00000030  3C 7A				cmp AL, 'z'
@@ -240,6 +240,8 @@ Ass2-Q2.asm						     Page 1 - 1
  00000048  EB 10				jmp next1
  0000004A					next:
 
+						; Converts from upper to lower
+						; .IF AL >= 'A' && AL <= 'Z'
  0000004A  3C 41				cmp AL, 'A'
  0000004C  72 0C				JB  next1
  0000004E  3C 5A				cmp AL, 'Z'
@@ -264,9 +266,7 @@ Ass2-Q2.asm						     Page 1 - 1
  00000067				end_do:
 
 
-
-
-
+				; This is the better way to do it but since the prof wants us to practice this way.
 				;	.WHILE EDX < ECX
 				;		MOV AL, [string + EDX]
 				;		.IF AL != 0
@@ -358,7 +358,7 @@ Ass2-Q2.asm						     Page 1 - 1
  000000F6  E8 00000000 E   *	    call   ExitProcess
  000000FB			main endp
 				end main
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 11:47:15
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 13:11:28
 Ass2-Q2.asm						     Symbols 2 - 1
 
 
