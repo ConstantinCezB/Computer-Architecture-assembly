@@ -31,7 +31,13 @@ main proc
 	MOV EAX, 0
 	MOV EBX, 1
 	MOV ECX, 0
-	.WHILE ECX <= counter
+
+
+	do_while:
+		; Loop counter if ECX > counter
+		cmp ECX, counter
+		ja end_do
+
 		INC ECX
 
 		; Writes the decimal of the fibonacci sequence
@@ -44,7 +50,26 @@ main proc
 		MOV EAX, EBX
 		MOV EBX, sumOfPrevTwo
 
-	.ENDW
+		jmp do_while
+	end_do:
+
+
+
+; This is the better way to do it but since the prof wants us to practice this way.
+;	.WHILE ECX <= counter
+;		INC ECX
+;
+;		; Writes the decimal of the fibonacci sequence
+;		CALL WriteString
+;		CALL WriteDec 
+;
+;		; Fib calculations
+;		MOV sumOfPrevTwo, EAX
+;		ADD sumOfPrevTwo, EBX
+;		MOV EAX, EBX
+;		MOV EBX, sumOfPrevTwo
+;
+;	.ENDW
 
 	CALL Crlf
 

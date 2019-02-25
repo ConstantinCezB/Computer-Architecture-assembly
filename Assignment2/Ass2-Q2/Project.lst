@@ -1,6 +1,8 @@
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/24/19 12:49:51
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 11:47:15
 Ass2-Q2.asm						     Page 1 - 1
 
+
+				; Author: Cezar Begu 104808191
 
 				include Irvine32.inc
 			      C ; Include file for Irvine32.lib             (Irvine32.inc)
@@ -155,6 +157,7 @@ Ass2-Q2.asm						     Page 1 - 1
 	   ]
  00000080 00000000		numberOFChar DWORD 0
  00000084 00000000		numberOfUpper DWORD 0
+				; Messages used as display for this program
  00000088 45 6E 74 65 72	message BYTE 'Enter a string of at most 128 characters: ', 0
 	   20 61 20 73 74
 	   72 69 6E 67 20
@@ -203,7 +206,7 @@ Ass2-Q2.asm						     Page 1 - 1
 
  00000000			.code
  00000000			main proc
-
+					; Prompts the user to enter a string according to specifications
  00000000  BA 00000088 R		MOV EDX, OFFSET message
  00000005  E8 00000000 E		CALL WriteString
 					
@@ -214,103 +217,148 @@ Ass2-Q2.asm						     Page 1 - 1
 
 					; Convers the upper letter to lower case letters
  00000019  BA 00000000			MOV EDX, 0
-					.WHILE EDX < ECX
- 0000001E  EB 3D	   *	    jmp    @C0001
- 00000020		   *@C0002:
- 00000020  8A 82 00000000 R			MOV AL, [string + EDX]
-						.IF AL != 0
- 00000026  0A C0	   *	    or	al, al
- 00000028  74 31	   *	    je	@C0003
-							.IF AL >= 'a' && AL <= 'z'
- 0000002A  3C 61	   *	    cmp    al, 'a'
- 0000002C  72 14	   *	    jb	@C0005
- 0000002E  3C 7A	   *	    cmp    al, 'z'
- 00000030  77 10	   *	    ja	@C0005
- 00000032  FF 05 00000084 R					INC numberOfUpper
- 00000038  2C 20						SUB AL, 20h
- 0000003A  88 82 00000000 R					MOV [string + EDX], AL
-							.ELSEIF AL >= 'A' && AL <= 'Z'
- 00000040  EB 10	   *	    jmp    @C0008
- 00000042		   *@C0005:
- 00000042  3C 41	   *	    cmp    al, 'A'
- 00000044  72 0C	   *	    jb	@C0009
- 00000046  3C 5A	   *	    cmp    al, 'Z'
- 00000048  77 08	   *	    ja	@C0009
- 0000004A  04 20						ADD AL, 20h
- 0000004C  88 82 00000000 R					MOV [string + EDX], AL
-							.ENDIF
- 00000052		   *@C0009:
- 00000052		   *@C0008:
- 00000052  FF 05 00000080 R				INC numberOFChar
- 00000058  42						INC EDX
-						.ELSE
- 00000059  EB 02	   *	    jmp    @C000C
- 0000005B		   *@C0003:
- 0000005B  8B D1					MOV EDX, ECX
-						.ENDIF
-					.ENDW
- 0000005D		   *@C000C:
- 0000005D		   *@C0001:
- 0000005D  3B D1	   *	    cmp    edx, ecx
- 0000005F  72 BF	   *	    jb	@C0002
+ 0000001E				do_while:
+						; Loop counter if ECX >= counter
+ 0000001E  3B D1				CMP EDX, ECX
+ 00000020  73 45				JAE end_do
+
+ 00000022  8A 82 00000000 R			MOV AL, [string + EDX]
+						; IF statment
+ 00000028  3C 00				cmp AL, 0
+ 0000002A  74 37				JE L1
+						;statment 1
+
+
+ 0000002C  3C 61				cmp AL, 'a'
+ 0000002E  72 1A				JB  next
+ 00000030  3C 7A				cmp AL, 'z'
+ 00000032  77 16				JA next
+ 00000034  FF 05 00000084 R			INC numberOfUpper
+ 0000003A  2C 20				SUB AL, 20h
+ 0000003C  88 82 00000000 R			MOV [string + EDX], AL
+ 00000042  8A 82 00000000 R			MOV AL, [string + EDX]
+ 00000048  EB 10				jmp next1
+ 0000004A					next:
+
+ 0000004A  3C 41				cmp AL, 'A'
+ 0000004C  72 0C				JB  next1
+ 0000004E  3C 5A				cmp AL, 'Z'
+ 00000050  77 08				JA next1
+ 00000052  04 20				ADD AL, 20h
+ 00000054  88 82 00000000 R			MOV [string + EDX], AL
+ 0000005A					next1:
+
+
+
+ 0000005A  FF 05 00000080 R			INC numberOFChar
+ 00000060  42					INC EDX
+
+ 00000061  EB 02				jmp L2
+ 00000063					L1:	
+							;statment 2
+ 00000063  8B D1					MOV EDX, ECX
+ 00000065					L2:
+
+
+ 00000065  EB B7				JMP do_while
+ 00000067				end_do:
+
+
+
+
+
+				;	.WHILE EDX < ECX
+				;		MOV AL, [string + EDX]
+				;		.IF AL != 0
+				;			; Converts lower to upper
+				;			.IF AL >= 'a' && AL <= 'z'
+				;				INC numberOfUpper
+				;				SUB AL, 20h
+				;				MOV [string + EDX], AL
+				;			; Converts upper to lower
+				;			.ELSEIF AL >= 'A' && AL <= 'Z'
+				;				ADD AL, 20h
+				;				MOV [string + EDX], AL
+				;			.ENDIF
+				;			INC numberOFChar
+				;			INC EDX
+				;		.ELSE
+				;			MOV EDX, ECX
+				;		.ENDIF
+				;s	.ENDW
 
 					; Lets the user know that the output bellow is the ans
- 00000061  E8 00000000 E		CALL Crlf
- 00000066  BA 000000B3 R		MOV EDX, OFFSET message1
- 0000006B  E8 00000000 E		CALL WriteString
- 00000070  E8 00000000 E		CALL Crlf
+ 00000067  E8 00000000 E		CALL Crlf
+ 0000006C  BA 000000B3 R		MOV EDX, OFFSET message1
+ 00000071  E8 00000000 E		CALL WriteString
+ 00000076  E8 00000000 E		CALL Crlf
+
+
 
 					; Prints the string entered in reverse order
- 00000075  8B 15 00000080 R		MOV EDX, numberOFChar
- 0000007B  4A				DEC EDX
-					.WHILE EDX != 200
- 0000007C  EB 17	   *	    jmp    @C000E
- 0000007E		   *@C000F:
- 0000007E  8A 82 00000000 R			MOV AL, [string + EDX]
- 00000084  E8 00000000 E			CALL WriteChar
+					; number 200 can be used since the max string can be 128 (much lower then 200)
+ 0000007B  8B 15 00000080 R		MOV EDX, numberOFChar
+ 00000081  4A				DEC EDX
+ 00000082				do_while1:
+						; Loop counter if ECX = counter exit
+ 00000082  81 FA 000000C8			CMP EDX, 200
+ 00000088  74 1A				JE end_do1
 
-						.IF EDX != 0
- 00000089  0B D2	   *	    or	edx, edx
- 0000008B  74 03	   *	    je	@C0010
- 0000008D  4A						DEC EDX
-						.ELSE 
- 0000008E  EB 05	   *	    jmp    @C0012
- 00000090		   *@C0010:
- 00000090  BA 000000C8					MOV EDX, 200
-						.ENDIF
-					.ENDW
- 00000095		   *@C0012:
- 00000095		   *@C000E:
- 00000095  81 FA 000000C8  *	    cmp    edx, 0C8h
- 0000009B  75 E1	   *	    jne    @C000F
- 0000009D  E8 00000000 E		CALL Crlf
- 000000A2  E8 00000000 E		CALL Crlf
+ 0000008A  8A 82 00000000 R			MOV AL, [string + EDX]
+ 00000090  E8 00000000 E			CALL WriteChar
+
+						; IF statment
+ 00000095  83 FA 00				cmp EDX, 0
+ 00000098  74 03				JE L11
+ 0000009A  4A					DEC EDX
+ 0000009B  EB 05				jmp L21
+ 0000009D					L11:	
+ 0000009D  BA 000000C8					MOV EDX, 200
+ 000000A2					L21:
+
+ 000000A2  EB DE				JMP do_while1
+ 000000A4				end_do1:
+
+				; This the best way but the prof required us to write it from scrap
+				;	.WHILE EDX != 200
+				;		MOV AL, [string + EDX]
+				;		CALL WriteChar
+				;
+				;		.IF EDX != 0
+				;			DEC EDX
+				;		.ELSE 
+				;			MOV EDX, 200
+				;		.ENDIF
+				;	.ENDW
+
+
+ 000000A4  E8 00000000 E		CALL Crlf
+ 000000A9  E8 00000000 E		CALL Crlf
 
 					; Prints the number of upper case letters
- 000000A7  BA 00000101 R		MOV EDX,  OFFSET message2
- 000000AC  E8 00000000 E		CALL WriteString
- 000000B1  A1 00000084 R		MOV EAX, numberOfUpper
- 000000B6  E8 00000000 E		CALL WriteDec
- 000000BB  BA 0000010C R		MOV EDX,  OFFSET message3
- 000000C0  E8 00000000 E		CALL WriteString
- 000000C5  E8 00000000 E		CALL Crlf
+ 000000AE  BA 00000101 R		MOV EDX,  OFFSET message2
+ 000000B3  E8 00000000 E		CALL WriteString
+ 000000B8  A1 00000084 R		MOV EAX, numberOfUpper
+ 000000BD  E8 00000000 E		CALL WriteDec
+ 000000C2  BA 0000010C R		MOV EDX,  OFFSET message3
+ 000000C7  E8 00000000 E		CALL WriteString
+ 000000CC  E8 00000000 E		CALL Crlf
 
 					; Prints the number of characters in the inputed string
- 000000CA  BA 00000132 R		MOV EDX,  OFFSET message4
- 000000CF  E8 00000000 E		CALL WriteString
- 000000D4  A1 00000080 R		MOV EAX, numberOFChar
- 000000D9  E8 00000000 E		CALL WriteDec
- 000000DE  BA 0000013D R		MOV EDX,  OFFSET message5
- 000000E3  E8 00000000 E		CALL WriteString
- 000000E8  E8 00000000 E		CALL Crlf
-
+ 000000D1  BA 00000132 R		MOV EDX,  OFFSET message4
+ 000000D6  E8 00000000 E		CALL WriteString
+ 000000DB  A1 00000080 R		MOV EAX, numberOFChar
+ 000000E0  E8 00000000 E		CALL WriteDec
+ 000000E5  BA 0000013D R		MOV EDX,  OFFSET message5
+ 000000EA  E8 00000000 E		CALL WriteString
+ 000000EF  E8 00000000 E		CALL Crlf
 
 					exit
- 000000ED  6A 00	   *	    push   +000000000h
- 000000EF  E8 00000000 E   *	    call   ExitProcess
- 000000F4			main endp
+ 000000F4  6A 00	   *	    push   +000000000h
+ 000000F6  E8 00000000 E   *	    call   ExitProcess
+ 000000FB			main endp
 				end main
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/24/19 12:49:51
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 11:47:15
 Ass2-Q2.asm						     Symbols 2 - 1
 
 
@@ -405,7 +453,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 00000158 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000000F4 Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000FB Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -512,7 +560,17 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000F4 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000FB Public STDCALL
+  do_while . . . . . . . . . . .	L Near	 0000001E _TEXT	
+  next . . . . . . . . . . . . .	L Near	 0000004A _TEXT	
+  next1  . . . . . . . . . . . .	L Near	 0000005A _TEXT	
+  L1 . . . . . . . . . . . . . .	L Near	 00000063 _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 00000065 _TEXT	
+  end_do . . . . . . . . . . . .	L Near	 00000067 _TEXT	
+  do_while1  . . . . . . . . . .	L Near	 00000082 _TEXT	
+  L11  . . . . . . . . . . . . .	L Near	 0000009D _TEXT	
+  L21  . . . . . . . . . . . . .	L Near	 000000A2 _TEXT	
+  end_do1  . . . . . . . . . . .	L Near	 000000A4 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C

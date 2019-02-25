@@ -1,9 +1,8 @@
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/24/19 00:03:00
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 10:16:40
 Ass2-Q1.asm						     Page 1 - 1
 
 
-				; AddTwo.asm - adds two 32-bit integers.
-				; Chapter 3 example
+				; Author: Cezar Begu 104808191
 
 				include Irvine32.inc
 			      C ; Include file for Irvine32.lib             (Irvine32.inc)
@@ -153,52 +152,78 @@ Ass2-Q1.asm						     Page 1 - 1
 			      C 
 
  00000000			.data
- 00000000 46 69 62 6F 6E	displayMessage1 BYTE 'Fibonacci sequence with N = ', 0
+ 00000000 00000000		counter DWORD 0
+ 00000004 00000000		sumOfPrevTwo DWORD 0
+ 00000008 20 00			space BYTE ' ', 0
+				; Messages used to display info for the user
+ 0000000A 46 69 62 6F 6E	displayMessage1 BYTE 'Fibonacci sequence with N = ', 0
 	   61 63 63 69 20
 	   73 65 71 75 65
 	   6E 63 65 20 77
 	   69 74 68 20 4E
 	   20 3D 20 00
- 0000001D 00000000		counter DWORD 0
- 00000021 20 69 73 3A 00	displayMessage2 BYTE ' is:', 0
- 00000026 00000000		sumOfPrevTwo DWORD 0
- 0000002A 20 00			space BYTE ' ', 0
+ 00000027 20 69 73 3A 00	displayMessage2 BYTE ' is:', 0
 
  00000000			.code
  00000000			main proc
 					
+					; Reads N from user to determine the fib sequence
  00000000  E8 00000000 E		CALL ReadDec 
- 00000005  A3 0000001D R		MOV counter, EAX
+ 00000005  A3 00000000 R		MOV counter, EAX
 
 					; Writting the message 
- 0000000A  BA 00000000 R		MOV EDX, OFFSET displayMessage1
+ 0000000A  BA 0000000A R		MOV EDX, OFFSET displayMessage1
  0000000F  E8 00000000 E		call WriteString
  00000014  E8 00000000 E		CALL WriteDec
- 00000019  BA 00000021 R		MOV EDX, OFFSET displayMessage2
+ 00000019  BA 00000027 R		MOV EDX, OFFSET displayMessage2
  0000001E  E8 00000000 E		call WriteString
 
- 00000023  BA 0000002A R		MOV EDX, OFFSET space
+					; Loading space char in register to be displayed before printing fib numbers
+ 00000023  BA 00000008 R		MOV EDX, OFFSET space
 
+					; Initializing the registors
  00000028  B8 00000000			MOV EAX, 0
  0000002D  BB 00000001			MOV EBX, 1
  00000032  B9 00000000			MOV ECX, 0
-					.WHILE ECX <= counter
- 00000037  EB 1E	   *	    jmp    @C0001
- 00000039		   *@C0002:
- 00000039  41					INC ECX
 
- 0000003A  E8 00000000 E			CALL WriteString
- 0000003F  E8 00000000 E			CALL WriteDec 
 
- 00000044  A3 00000026 R			MOV sumOfPrevTwo, EAX
- 00000049  01 1D 00000026 R			ADD sumOfPrevTwo, EBX
- 0000004F  8B C3				MOV EAX, EBX
- 00000051  8B 1D 00000026 R			MOV EBX, sumOfPrevTwo
+ 00000037				do_while:
+						; Loop counter if ECX > counter
+ 00000037  3B 0D 00000000 R			cmp ECX, counter
+ 0000003D  77 20				ja end_do
 
-					.ENDW
- 00000057		   *@C0001:
- 00000057  3B 0D 0000001D R *	    cmp    ecx, counter
- 0000005D  76 DA	   *	    jbe    @C0002
+ 0000003F  41					INC ECX
+
+						; Writes the decimal of the fibonacci sequence
+ 00000040  E8 00000000 E			CALL WriteString
+ 00000045  E8 00000000 E			CALL WriteDec 
+
+						; Fib calculations
+ 0000004A  A3 00000004 R			MOV sumOfPrevTwo, EAX
+ 0000004F  01 1D 00000004 R			ADD sumOfPrevTwo, EBX
+ 00000055  8B C3				MOV EAX, EBX
+ 00000057  8B 1D 00000004 R			MOV EBX, sumOfPrevTwo
+
+ 0000005D  EB D8				jmp do_while
+ 0000005F				end_do:
+
+
+
+				; This is the better way to do it but since the prof wants us to practice this way.
+				;	.WHILE ECX <= counter
+				;		INC ECX
+				;
+				;		; Writes the decimal of the fibonacci sequence
+				;		CALL WriteString
+				;		CALL WriteDec 
+				;
+				;		; Fib calculations
+				;		MOV sumOfPrevTwo, EAX
+				;		ADD sumOfPrevTwo, EBX
+				;		MOV EAX, EBX
+				;		MOV EBX, sumOfPrevTwo
+				;
+				;	.ENDW
 
  0000005F  E8 00000000 E		CALL Crlf
 
@@ -207,7 +232,7 @@ Ass2-Q1.asm						     Page 1 - 1
  00000066  E8 00000000 E   *	    call   ExitProcess
  0000006B			main endp
 				end main
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/24/19 00:03:00
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 10:16:40
 Ass2-Q1.asm						     Symbols 2 - 1
 
 
@@ -410,6 +435,8 @@ WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000006B Public STDCALL
+  do_while . . . . . . . . . . .	L Near	 00000037 _TEXT	
+  end_do . . . . . . . . . . . .	L Near	 0000005F _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -631,10 +658,10 @@ WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 brown  . . . . . . . . . . . . .	Number	 00000006h   
-counter  . . . . . . . . . . . .	DWord	 0000001D _DATA	
+counter  . . . . . . . . . . . .	DWord	 00000000 _DATA	
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
-displayMessage1  . . . . . . . .	Byte	 00000000 _DATA	
-displayMessage2  . . . . . . . .	Byte	 00000021 _DATA	
+displayMessage1  . . . . . . . .	Byte	 0000000A _DATA	
+displayMessage2  . . . . . . . .	Byte	 00000027 _DATA	
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
 gray . . . . . . . . . . . . . .	Number	 00000008h   
 green  . . . . . . . . . . . . .	Number	 00000002h   
@@ -646,8 +673,8 @@ lightMagenta . . . . . . . . . .	Number	 0000000Dh
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-space  . . . . . . . . . . . . .	Byte	 0000002A _DATA	
-sumOfPrevTwo . . . . . . . . . .	DWord	 00000026 _DATA	
+space  . . . . . . . . . . . . .	Byte	 00000008 _DATA	
+sumOfPrevTwo . . . . . . . . . .	DWord	 00000004 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   

@@ -27,25 +27,75 @@ main proc
 
 	; Convers the upper letter to lower case letters
 	MOV EDX, 0
-	.WHILE EDX < ECX
+	do_while:
+		; Loop counter if ECX >= counter
+		CMP EDX, ECX
+		JAE end_do
+
 		MOV AL, [string + EDX]
-		.IF AL != 0
-			; Converts lower to upper
-			.IF AL >= 'a' && AL <= 'z'
-				INC numberOfUpper
-				SUB AL, 20h
-				MOV [string + EDX], AL
-			; Converts upper to lower
-			.ELSEIF AL >= 'A' && AL <= 'Z'
-				ADD AL, 20h
-				MOV [string + EDX], AL
-			.ENDIF
-			INC numberOFChar
-			INC EDX
-		.ELSE
+		; IF statment
+		cmp AL, 0
+		JE L1
+		;statment 1
+		; Converts from lower to upper
+		; .IF AL >= 'a' && AL <= 'z'
+		cmp AL, 'a'
+		JB  next
+		cmp AL, 'z'
+		JA next
+		INC numberOfUpper
+		SUB AL, 20h
+		MOV [string + EDX], AL
+		MOV AL, [string + EDX]
+		jmp next1
+		next:
+
+		; Converts from upper to lower
+		; .IF AL >= 'A' && AL <= 'Z'
+		cmp AL, 'A'
+		JB  next1
+		cmp AL, 'Z'
+		JA next1
+		ADD AL, 20h
+		MOV [string + EDX], AL
+		next1:
+
+
+
+		INC numberOFChar
+		INC EDX
+
+		jmp L2
+		L1:	
+			;statment 2
 			MOV EDX, ECX
-		.ENDIF
-	.ENDW
+		L2:
+
+
+		JMP do_while
+	end_do:
+
+
+; This is the better way to do it but since the prof wants us to practice this way.
+;	.WHILE EDX < ECX
+;		MOV AL, [string + EDX]
+;		.IF AL != 0
+;			; Converts lower to upper
+;			.IF AL >= 'a' && AL <= 'z'
+;				INC numberOfUpper
+;				SUB AL, 20h
+;				MOV [string + EDX], AL
+;			; Converts upper to lower
+;			.ELSEIF AL >= 'A' && AL <= 'Z'
+;				ADD AL, 20h
+;				MOV [string + EDX], AL
+;			.ENDIF
+;			INC numberOFChar
+;			INC EDX
+;		.ELSE
+;			MOV EDX, ECX
+;		.ENDIF
+;s	.ENDW
 
 	; Lets the user know that the output bellow is the ans
 	CALL Crlf
@@ -53,20 +103,45 @@ main proc
 	CALL WriteString
 	CALL Crlf
 
+
+
 	; Prints the string entered in reverse order
 	; number 200 can be used since the max string can be 128 (much lower then 200)
 	MOV EDX, numberOFChar
 	DEC EDX
-	.WHILE EDX != 200
+	do_while1:
+		; Loop counter if ECX = counter exit
+		CMP EDX, 200
+		JE end_do1
+
 		MOV AL, [string + EDX]
 		CALL WriteChar
 
-		.IF EDX != 0
-			DEC EDX
-		.ELSE 
+		; IF statment
+		cmp EDX, 0
+		JE L11
+		DEC EDX
+		jmp L21
+		L11:	
 			MOV EDX, 200
-		.ENDIF
-	.ENDW
+		L21:
+
+		JMP do_while1
+	end_do1:
+
+; This the best way but the prof required us to write it from scrap
+;	.WHILE EDX != 200
+;		MOV AL, [string + EDX]
+;		CALL WriteChar
+;
+;		.IF EDX != 0
+;			DEC EDX
+;		.ELSE 
+;			MOV EDX, 200
+;		.ENDIF
+;	.ENDW
+
+
 	CALL Crlf
 	CALL Crlf
 
