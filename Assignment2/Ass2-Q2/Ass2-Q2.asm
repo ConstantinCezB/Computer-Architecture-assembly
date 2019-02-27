@@ -3,7 +3,7 @@
 include Irvine32.inc
 
 .data
-string BYTE 128 DUP (0)
+string BYTE 129 DUP (0)
 numberOFChar DWORD 0
 numberOfUpper DWORD 0
 ; Messages used as display for this program
@@ -22,7 +22,7 @@ main proc
 	
 	; Reads the string from the user
 	MOV EDX, OFFSET string
-	MOV ECX, SIZEOF string - 1
+	MOV ECX, SIZEOF string
 	CALL ReadString
 
 	; Convers the upper letter to lower case letters

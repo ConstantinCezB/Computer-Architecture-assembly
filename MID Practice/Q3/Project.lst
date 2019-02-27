@@ -1,8 +1,8 @@
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 22:27:18
-Ass2-Q2.asm						     Page 1 - 1
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/27/19 08:22:19
+Q3.asm							     Page 1 - 1
 
 
-				; Author: Cezar Begu 104808191
+
 
 				include Irvine32.inc
 			      C ; Include file for Irvine32.lib             (Irvine32.inc)
@@ -152,214 +152,86 @@ Ass2-Q2.asm						     Page 1 - 1
 			      C 
 
  00000000			.data
- 00000000  00000081 [		string BYTE 129 DUP (0)
-	    00
-	   ]
- 00000081 00000000		numberOFChar DWORD 0
- 00000085 00000000		numberOfUpper DWORD 0
-				; Messages used as display for this program
- 00000089 45 6E 74 65 72	message BYTE 'Enter a string of at most 128 characters: ', 0
-	   20 61 20 73 74
-	   72 69 6E 67 20
-	   6F 66 20 61 74
-	   20 6D 6F 73 74
-	   20 31 32 38 20
-	   63 68 61 72 61
-	   63 74 65 72 73
-	   3A 20 00
- 000000B4 48 65 72 65 20	message1 BYTE 'Here it is, with all lowercases and uppercases flipped, and in reverse order:', 0
-	   69 74 20 69 73
-	   2C 20 77 69 74
-	   68 20 61 6C 6C
-	   20 6C 6F 77 65
-	   72 63 61 73 65
-	   73 20 61 6E 64
-	   20 75 70 70 65
-	   72 63 61 73 65
-	   73 20 66 6C 69
-	   70 70 65 64 2C
-	   20 61 6E 64 20
-	   69 6E 20 72 65
-	   76 65 72 73 65
-	   20 6F 72 64 65
-	   72 3A 00
- 00000102 54 68 65 72 65	message2 BYTE 'There are ', 0
-	   20 61 72 65 20
+ 00000000 00000001			Vector DWORD 1 , 1 , 2,3,5,8,13,21,34,55
+	   00000001
+	   00000002
+	   00000003
+	   00000005
+	   00000008
+	   0000000D
+	   00000015
+	   00000022
+	   00000037
+ 00000028 00000001			bool DWORD 1
+ 0000002C 74 68 69 73 20		message1 BYTE 'this is not aaa fib lookalike', 0
+	   69 73 20 6E 6F
+	   74 20 61 61 61
+	   20 66 69 62 20
+	   6C 6F 6F 6B 61
+	   6C 69 6B 65 00
+ 0000004A 74 68 69 73 20		message2 BYTE 'this is aaa fib', 0
+	   69 73 20 61 61
+	   61 20 66 69 62
 	   00
- 0000010D 20 75 70 70 65	message3 BYTE ' upper-case letters after conversion.', 0
-	   72 2D 63 61 73
-	   65 20 6C 65 74
-	   74 65 72 73 20
-	   61 66 74 65 72
-	   20 63 6F 6E 76
-	   65 72 73 69 6F
-	   6E 2E 00
- 00000133 54 68 65 72 65	message4 BYTE 'There are ', 0
-	   20 61 72 65 20
-	   00
- 0000013E 20 63 68 61 72	message5 BYTE ' characters in the string.', 0
-	   61 63 74 65 72
-	   73 20 69 6E 20
-	   74 68 65 20 73
-	   74 72 69 6E 67
-	   2E 00
 
  00000000			.code
  00000000			main proc
-					; Prompts the user to enter a string according to specifications
- 00000000  BA 00000089 R		MOV EDX, OFFSET message
- 00000005  E8 00000000 E		CALL WriteString
-					
-					; Reads the string from the user
- 0000000A  BA 00000000 R		MOV EDX, OFFSET string
- 0000000F  B9 00000081			MOV ECX, SIZEOF string
- 00000014  E8 00000000 E		CALL ReadString
 
-					; Convers the upper letter to lower case letters
- 00000019  BA 00000000			MOV EDX, 0
- 0000001E				do_while:
-						; Loop counter if ECX >= counter
- 0000001E  3B D1				CMP EDX, ECX
- 00000020  73 45				JAE end_do
+ 00000000  83 3D 00000000 R		CMP Vector, 2
+	   02
+ 00000007  76 5B			JBE else_
+						
+ 00000009  BB 00000000 R			MOV EBX, OFFSET Vector
+ 0000000E  BE 00000008				MOV ESI, TYPE Vector * 2
 
- 00000022  8A 82 00000000 R			MOV AL, [string + EDX]
-						; IF statment
- 00000028  3C 00				cmp AL, 0
- 0000002A  74 37				JE L1
-						;statment 1
-						; Converts from lower to upper
-						; .IF AL >= 'a' && AL <= 'z'
- 0000002C  3C 61				cmp AL, 'a'
- 0000002E  72 1A				JB  next
- 00000030  3C 7A				cmp AL, 'z'
- 00000032  77 16				JA next
- 00000034  FF 05 00000085 R			INC numberOfUpper
- 0000003A  2C 20				SUB AL, 20h
- 0000003C  88 82 00000000 R			MOV [string + EDX], AL
- 00000042  8A 82 00000000 R			MOV AL, [string + EDX]
- 00000048  EB 10				jmp next1
- 0000004A					next:
+ 00000013					do_while:
+ 00000013  83 FE 28					CMP ESI, SIZEOF Vector
+ 00000016  74 23					JE end_while
 
-						; Converts from upper to lower
-						; .IF AL >= 'A' && AL <= 'Z'
- 0000004A  3C 41				cmp AL, 'A'
- 0000004C  72 0C				JB  next1
- 0000004E  3C 5A				cmp AL, 'Z'
- 00000050  77 08				JA next1
- 00000052  04 20				ADD AL, 20h
- 00000054  88 82 00000000 R			MOV [string + EDX], AL
- 0000005A					next1:
+ 00000018  8B CE						MOV ECX,ESI
+ 0000001A  83 E9 04						SUB ECX, TYPE Vector * 1
+ 0000001D  8B D6						MOV EDX, ESI
+ 0000001F  83 EA 08						SUB EDX, TYPE Vector * 2
+
+ 00000022  8B 04 0B						MOV EAX, [EBX + ECX]
+ 00000025  03 04 13						ADD EAX, [EBX + EDX]
+
+ 00000028  3B C3						CMP EAX, EBX
+ 0000002A  74 0A						JE else_2
+ 0000002C  C7 05 00000028 R						MOV bool, 0
+	   00000000
+ 00000036							else_2:
+
+ 00000036  83 C6 04					ADD ESI, TYPE Vector
+ 00000039  EB D8					JMP do_while
+ 0000003B					end_while:
 
 
 
- 0000005A  FF 05 00000081 R			INC numberOFChar
- 00000060  42					INC EDX
 
- 00000061  EB 02				jmp L2
- 00000063					L1:	
-							;statment 2
- 00000063  8B D1					MOV EDX, ECX
- 00000065					L2:
+ 0000003B  83 3D 00000028 R			CMP bool, 0
+	   00
+ 00000042  74 0F				JE else_3
+ 00000044  BA 0000004A R				MOV EDX, OFFSET message2
+ 00000049  E8 00000000 E				CALL WriteString
+ 0000004E  E8 00000000 E				CALL Crlf
+ 00000053					else_3:
+ 00000053  BA 0000002C R				MOV EDX, OFFSET message1
+ 00000058  E8 00000000 E				CALL WriteString
+ 0000005D  E8 00000000 E				CALL Crlf
 
+ 00000062  EB 00			JMP if_end
+ 00000064				else_:
 
- 00000065  EB B7				JMP do_while
- 00000067				end_do:
-
-
-				; This is the better way to do it but since the prof wants us to practice this way.
-				;	.WHILE EDX < ECX
-				;		MOV AL, [string + EDX]
-				;		.IF AL != 0
-				;			; Converts lower to upper
-				;			.IF AL >= 'a' && AL <= 'z'
-				;				INC numberOfUpper
-				;				SUB AL, 20h
-				;				MOV [string + EDX], AL
-				;			; Converts upper to lower
-				;			.ELSEIF AL >= 'A' && AL <= 'Z'
-				;				ADD AL, 20h
-				;				MOV [string + EDX], AL
-				;			.ENDIF
-				;			INC numberOFChar
-				;			INC EDX
-				;		.ELSE
-				;			MOV EDX, ECX
-				;		.ENDIF
-				;s	.ENDW
-
-					; Lets the user know that the output bellow is the ans
- 00000067  E8 00000000 E		CALL Crlf
- 0000006C  BA 000000B4 R		MOV EDX, OFFSET message1
- 00000071  E8 00000000 E		CALL WriteString
- 00000076  E8 00000000 E		CALL Crlf
-
-
-
-					; Prints the string entered in reverse order
-					; number 200 can be used since the max string can be 128 (much lower then 200)
- 0000007B  8B 15 00000081 R		MOV EDX, numberOFChar
- 00000081  4A				DEC EDX
- 00000082				do_while1:
-						; Loop counter if ECX = counter exit
- 00000082  81 FA 000000C8			CMP EDX, 200
- 00000088  74 1A				JE end_do1
-
- 0000008A  8A 82 00000000 R			MOV AL, [string + EDX]
- 00000090  E8 00000000 E			CALL WriteChar
-
-						; IF statment
- 00000095  83 FA 00				cmp EDX, 0
- 00000098  74 03				JE L11
- 0000009A  4A					DEC EDX
- 0000009B  EB 05				jmp L21
- 0000009D					L11:	
- 0000009D  BA 000000C8					MOV EDX, 200
- 000000A2					L21:
-
- 000000A2  EB DE				JMP do_while1
- 000000A4				end_do1:
-
-				; This the best way but the prof required us to write it from scrap
-				;	.WHILE EDX != 200
-				;		MOV AL, [string + EDX]
-				;		CALL WriteChar
-				;
-				;		.IF EDX != 0
-				;			DEC EDX
-				;		.ELSE 
-				;			MOV EDX, 200
-				;		.ENDIF
-				;	.ENDW
-
-
- 000000A4  E8 00000000 E		CALL Crlf
- 000000A9  E8 00000000 E		CALL Crlf
-
-					; Prints the number of upper case letters
- 000000AE  BA 00000102 R		MOV EDX,  OFFSET message2
- 000000B3  E8 00000000 E		CALL WriteString
- 000000B8  A1 00000085 R		MOV EAX, numberOfUpper
- 000000BD  E8 00000000 E		CALL WriteDec
- 000000C2  BA 0000010D R		MOV EDX,  OFFSET message3
- 000000C7  E8 00000000 E		CALL WriteString
- 000000CC  E8 00000000 E		CALL Crlf
-
-					; Prints the number of characters in the inputed string
- 000000D1  BA 00000133 R		MOV EDX,  OFFSET message4
- 000000D6  E8 00000000 E		CALL WriteString
- 000000DB  A1 00000081 R		MOV EAX, numberOFChar
- 000000E0  E8 00000000 E		CALL WriteDec
- 000000E5  BA 0000013E R		MOV EDX,  OFFSET message5
- 000000EA  E8 00000000 E		CALL WriteString
- 000000EF  E8 00000000 E		CALL Crlf
+ 00000064				if_end:
 
 					exit
- 000000F4  6A 00	   *	    push   +000000000h
- 000000F6  E8 00000000 E   *	    call   ExitProcess
- 000000FB			main endp
+ 00000064  6A 00	   *	    push   +000000000h
+ 00000066  E8 00000000 E   *	    call   ExitProcess
+ 0000006B			main endp
 				end main
-Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/25/19 22:27:18
-Ass2-Q2.asm						     Symbols 2 - 1
+Microsoft (R) Macro Assembler Version 14.16.27026.1	    02/27/19 08:22:19
+Q3.asm							     Symbols 2 - 1
 
 
 
@@ -452,8 +324,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000159 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000000FB Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000005A Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000006B Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -560,17 +432,13 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000FB Public STDCALL
-  do_while . . . . . . . . . . .	L Near	 0000001E _TEXT	
-  next . . . . . . . . . . . . .	L Near	 0000004A _TEXT	
-  next1  . . . . . . . . . . . .	L Near	 0000005A _TEXT	
-  L1 . . . . . . . . . . . . . .	L Near	 00000063 _TEXT	
-  L2 . . . . . . . . . . . . . .	L Near	 00000065 _TEXT	
-  end_do . . . . . . . . . . . .	L Near	 00000067 _TEXT	
-  do_while1  . . . . . . . . . .	L Near	 00000082 _TEXT	
-  L11  . . . . . . . . . . . . .	L Near	 0000009D _TEXT	
-  L21  . . . . . . . . . . . . .	L Near	 000000A2 _TEXT	
-  end_do1  . . . . . . . . . . .	L Near	 000000A4 _TEXT	
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000006B Public STDCALL
+  do_while . . . . . . . . . . .	L Near	 00000013 _TEXT	
+  else_2 . . . . . . . . . . . .	L Near	 00000036 _TEXT	
+  end_while  . . . . . . . . . .	L Near	 0000003B _TEXT	
+  else_3 . . . . . . . . . . . .	L Near	 00000053 _TEXT	
+  else_  . . . . . . . . . . . .	L Near	 00000064 _TEXT	
+  if_end . . . . . . . . . . . .	L Near	 00000064 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -786,11 +654,13 @@ VK_SPACE . . . . . . . . . . . .	Number	 00000020h
 VK_SUBTRACT  . . . . . . . . . .	Number	 0000006Dh   
 VK_TAB . . . . . . . . . . . . .	Number	 00000009h   
 VK_UP  . . . . . . . . . . . . .	Number	 00000026h   
+Vector . . . . . . . . . . . . .	DWord	 00000000 _DATA	
 WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h   
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
+bool . . . . . . . . . . . . . .	DWord	 00000028 _DATA	
 brown  . . . . . . . . . . . . .	Number	 00000006h   
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
@@ -803,16 +673,9 @@ lightGreen . . . . . . . . . . .	Number	 0000000Ah
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
-message1 . . . . . . . . . . . .	Byte	 000000B4 _DATA	
-message2 . . . . . . . . . . . .	Byte	 00000102 _DATA	
-message3 . . . . . . . . . . . .	Byte	 0000010D _DATA	
-message4 . . . . . . . . . . . .	Byte	 00000133 _DATA	
-message5 . . . . . . . . . . . .	Byte	 0000013E _DATA	
-message  . . . . . . . . . . . .	Byte	 00000089 _DATA	
-numberOFChar . . . . . . . . . .	DWord	 00000081 _DATA	
-numberOfUpper  . . . . . . . . .	DWord	 00000085 _DATA	
+message1 . . . . . . . . . . . .	Byte	 0000002C _DATA	
+message2 . . . . . . . . . . . .	Byte	 0000004A _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-string . . . . . . . . . . . . .	Byte	 00000000 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
