@@ -1,0 +1,3 @@
+﻿  Assembling Ass3-1.asm...
+Ass3-1.asm(44): warning A6001: no return from procedure
+  Project.vcxproj -> C:\Users\const\Documents\Computer-Architecture-assembly\Assignment3\Assignment3_1\Debug\Project.exe
