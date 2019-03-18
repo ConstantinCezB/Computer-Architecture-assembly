@@ -175,6 +175,7 @@ main proc
 main endp
 
 ; promts user to enter the vector
+; The vector is entered by entering one int at a time and a input is ended by pressing enter
 Option0 PROC USES esi eax ebx ecx edx
 	MOV edx, OFFSET message2
 	CALL WriteString
